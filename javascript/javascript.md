@@ -137,6 +137,7 @@
   - Node.appendChild()
     - 한 Node를 특정 부모 Node의 자식 NodeList중 마지막 자식으로 삽입(Node만 추가 가능)
     - 한번에 오직 하나의 Node만 추가 할 수있음
+    - 여러개를 추가한다고 에러가 나진 않으며 하나 추가됨
     - 만약 주어진 Node가 이미 문서에 존재하는 다른 Node를 참조한다면 새로운 위치로 이동
     - 반환 값이 있음
 
@@ -169,3 +170,35 @@
     - 해당 요소의 지정된 값(문자열)을 반환
     - 인자(attributeName)는 값을 얻고자 하는 속성의 이름
 
+### Event(이벤트)
+
+#### 개념
+
+- 네트워크 활동이나 사용자와의 상호작용 같은 사건의 발생을 알리기 위한 객체
+- 이벤트 발생
+  - 마우스를 클릭하거나 키보드를 누르는 등 사용자 행동으로 발생할 수도 있음
+  - 특정 메서드를 호출(Element.click())하여 프로그래밍적으로도 만들어 낼 수 있다
+
+#### Event 기반 인터페이스
+
+- AnimationEvent, ClipboardEvent, DragEvent 등
+- UiEvent
+  - 간단한 사용자 인터페이스 이벤트
+  - Event의 상속을 받음
+  - MouseEvent, KeyboardEvent, InputEvent, FocusEvent 등의 부모 객체 역할을 함
+
+#### Event handler 
+
+##### 1. addEventListener
+
+- EventTarget.addEventListener()
+  - 지정한 이벤트가 대상에 전달될 때마다 호출할 함수를 설정
+  - 이벤트를 지원하는 모든 객체(Element, Document, Widnwo 등)를 대상으로 지정 가능
+- target.addEventListener( type, listner[, options])
+  - type
+    - 반응 할 이벤트 유형(대소문자 구분 문자열)
+  - listener
+    - 지정된 타입의 이벤트가 발생했을 떄 알림을 받는 객체
+    - EventListener 인터페이스 혹은 JS function 객체(콜백 함수)여야 함
+- **대상**에 **특정 이벤트**가 발생하면, **할 일**을 등록하자
+  - **EventTarget**.addEventListener(**type**, **listener**)
