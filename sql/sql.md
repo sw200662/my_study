@@ -249,7 +249,7 @@ SELECT * FROM users ORDER BY age ASC LIMIT 10;
 SELECT * FROM users ORDER BY age, last_name ASC LIMIT 10;
 
 #게좌 잔액 순으로 내림차순 정렬하여 해당 유저의 성과 이름을 10개만 조회한다면?
-SELECT last_name, first_name FROM users ORDER BY balance DSEC LIMIT 10;
+SELECT last_name, first_name FROM users ORDER BY balance DESC LIMIT 10;
 ```
 
 - GROUP BY
@@ -282,5 +282,54 @@ ALTER TABLE news ADD COLUMN crated_at TEXT NOT NULL;
 #이를 해결해기 위에서는 1. NOT NULL 설정 없이 추가하기 2. 기본 값(DEFAULT) 설정하기
 
 ALTER TABLE news ADD COLUMN subtitle TEXT NOT NULL DEFAULT '소제목';
+```
+
+
+
+
+
+#### 실전 예제
+
+```sql
+#두가지를 count해서 나타내기
+
+SELECT ANIMAL_TYPE, COUNT(ANIMAL_TYPE) 
+FROM ANIMAL_INS 
+GROUP BY ANIMAL_TYPE 
+ORDER BY ANIMAL_TYPE;
+
+#동명 동물
+SELECT NAME, COUNT(NAME)
+FROM ANIMAL_INS
+WHERE NAME is not null
+GROUP BY NAME
+HAVING COUNT(NAME) > 1 -- GROUP BY 이후에는 WHERE이 아니라 HAVING을 통해 해줌
+ORDER BY NAME
+
+#시간만 추출하기 
+#DATETIME이 타입인 변수에서 시간만 가져올려면 HOUR을 앞에 붙히면 된다!
+SELECT HOUR(DATETIME) AS HOUR, COUNT(DATETIME) AS COUNT
+FROM ANIMAL_OUTS
+WHERE HOUR(DATETIME) >= 9 AND HOUR(DATETIME) <= 19
+GROUP BY HOUR(DATETIME)
+ORDER BY HOUR
+
+#같은 문제지만, 만약 없는 시간까지 같이 테이블에 만들어서 조회해야하는 경우
+#예를 들자면 7~19시 밖에 없더라도 0~6시 20~23시 행이 필요
+SET @hour := -1;
+SELECT (@hour := @hour + 1) as HOUR,
+(SELECT COUNT(*) FROM ANIMAL_OUTS WHERE HOUR(DATETIME) = @hour) as COUNT -- 왜 괄호?
+-- 왜 select를 또 해줄까?
+FROM ANIMAL_OUTS
+WHERE @hour < 23
+
+#Null 변수(is NULL)
+SELECT ANIMAL_ID FROM ANIMAL_INS WHERE NAME is NULL;
+SELECT ANIMAL_ID FROM ANIMAL_INS WHERE NAME is NOT NULL;
+
+#null 변수를 이름 바꾸기
+SELECT ANIMAL_TYPE, IFNULL(NAME, 'No name') AS NAME, SEX_UPON_INTAKE
+FROM ANIMAL_INS
+ORDER BY ANIMAL_ID
 ```
 
